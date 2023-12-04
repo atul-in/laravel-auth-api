@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Auth;
 
 
 class AuthController extends Controller
@@ -51,6 +52,8 @@ class AuthController extends Controller
             ], 401);
         }
 
+        Auth::login($user);
+
         $token = $user->createToken('apiToken')->plainTextToken;
 
         $res = [
@@ -68,6 +71,12 @@ class AuthController extends Controller
             'message' => 'user logged out'
         ];
 
+    }
+
+    public function me(Request $request){
+        return response()->json([
+            'data' => $request->user(),
+        ]);
     }
 
 

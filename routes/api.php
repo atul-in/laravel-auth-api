@@ -23,10 +23,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // signup and login
 Route::post('/signup', [AuthController::class, 'sign_up']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/user', [AuthController::class, 'me']);
 
 // public post routes
-Route::get('/posts/search/{title}', [PostController::class, 'search']);
-Route::get('/post/author/{id}', [PostController::class, 'get_author']);
+// Route::get('/posts/search/{title}', [PostController::class, 'search']);
+// Route::get('/post/author/{id}', [PostController::class, 'get_author']);
 
 // public author routes
 // Route::get('/authors/search/{name}', [AuthorController::class, 'search']);
