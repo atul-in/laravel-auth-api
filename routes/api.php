@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,26 +25,17 @@ Route::post('/signup', [AuthController::class, 'sign_up']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/user', [AuthController::class, 'me']);
 
-// public post routes
-// Route::get('/posts/search/{title}', [PostController::class, 'search']);
-// Route::get('/post/author/{id}', [PostController::class, 'get_author']);
 
-// public author routes
-// Route::get('/authors/search/{name}', [AuthorController::class, 'search']);
-// Route::get('/author/posts/{id}', [AuthorController::class, 'get_posts']);
+Route::get('/tasks', [TaskController::class, 'getAllTasks']);
 
 // private posts and authors routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
-
-    // private post routes
-    Route::post('/posts', [PostController::class, 'store']);
-    Route::put('/posts/{id}', [PostController::class, 'update']);
-    Route::delete('/posts/{id}', [PostController::class, 'destroy']);
-
-    // private author routes
-    // Route::post('/authors', [AuthorController::class, 'store']);
-    // Route::put('/authors/{id}', [AuthorController::class, 'update']);
-    // Route::delete('/authors/{id}', [AuthorController::class, 'destroy']); 
+    
+    // Route::post('/tasks', [TaskController::class, 'createTask']);
+    // Route::get('/tasks', [TaskController::class, 'getAllTasks']);
+    // Route::get('/tasks/{id}', [TaskController::class, 'getTask']);
+    // Route::put('/tasks/{id}', [TaskController::class, 'updateTask']);
+    // Route::delete('/tasks/{id}', [TaskController::class, 'deleteTask']);
 
     // logout 
     Route::post('/logout', [AuthController::class, 'logout']);
