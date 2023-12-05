@@ -25,17 +25,15 @@ Route::post('/signup', [AuthController::class, 'sign_up']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/user', [AuthController::class, 'me']);
 
-
-Route::get('/tasks', [TaskController::class, 'getAllTasks']);
-
 // private posts and authors routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     
-    // Route::post('/tasks', [TaskController::class, 'createTask']);
-    // Route::get('/tasks', [TaskController::class, 'getAllTasks']);
-    // Route::get('/tasks/{id}', [TaskController::class, 'getTask']);
-    // Route::put('/tasks/{id}', [TaskController::class, 'updateTask']);
-    // Route::delete('/tasks/{id}', [TaskController::class, 'deleteTask']);
+    Route::post('/tasks', [TaskController::class, 'createTask']);
+    Route::get('/tasks', [TaskController::class, 'getAllTasks']);
+    Route::get('/task/{id}', [TaskController::class, 'getTask']);
+    Route::put('/task/{id}', [TaskController::class, 'updateTask']);
+    Route::patch('/task/{id}', [TaskController::class, 'updateTask']);
+    Route::delete('/task/{id}', [TaskController::class, 'deleteTask']);
 
     // logout 
     Route::post('/logout', [AuthController::class, 'logout']);
