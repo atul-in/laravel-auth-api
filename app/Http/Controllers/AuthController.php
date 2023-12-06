@@ -11,20 +11,24 @@ use Auth;
 
 class AuthController extends Controller
 {
-    public function sign_up(Request $request)
+    public function signup(Request $request)
     {
 
         $data = $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|unique:users,email',
             'password' => 'required|string|confirmed',
+            'role_id' => 'required'
         ]);
 
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password'])
+            'password' => bcrypt($data['password']),
+            'role_id' => $data['role_id']
         ]);
+
+        $user->notify(new \App\Notifications\WelcomeMailNotification($user));
 
         $token = $user->createToken('apiToken')->plainTextToken;
 
@@ -66,10 +70,9 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        auth()->user()->tokens()->delete();
-        return [
-            'message' => 'user logged out'
-        ];
+        $request->session()->invalidate();
+        Auth::logout();
+        return ['message' => 'user logged out'];
 
     }
 

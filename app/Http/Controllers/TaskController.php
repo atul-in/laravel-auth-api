@@ -25,9 +25,15 @@ class TaskController extends Controller
     public function getAllTasks(Request $request)
     {
         Log::debug("Going to load tasks");
+        $data = Auth::user()->role_id;
         try {
-            $tasks = Tasks::where('user_id', Auth::user()->id)->orderBy($request->sortBy, $request->desc ? 'desc' : 'asc')->paginate($request->perPage ? $request->perPage : 10);
-            return response()->json(['success' => true, 'data' => $tasks]);
+            if ($data == 1) {
+                $tasks = Tasks::orderBy($request->sortBy, $request->desc ? 'desc' : 'asc')->paginate($request->perPage ? $request->perPage : 10);
+                return response()->json(['success' => true, 'data' => $tasks]);
+            } else {
+                $tasks = Tasks::where('user_id', Auth::user()->id)->orderBy($request->sortBy, $request->desc ? 'desc' : 'asc')->paginate($request->perPage ? $request->perPage : 10);
+                return response()->json(['success' => true, 'data' => $tasks]);
+            }
         } catch (\Exception $error) {
             Log::debug($error->getMessage());
             return response()->json(['seccess' => false, 'error' => $error->getMessage()], 500);

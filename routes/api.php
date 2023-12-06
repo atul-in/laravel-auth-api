@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // signup and login
-Route::post('/signup', [AuthController::class, 'sign_up']);
+Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/user', [AuthController::class, 'me']);
 
@@ -36,6 +36,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('/task/{id}', [TaskController::class, 'deleteTask']);
 
     // logout 
-    Route::post('/logout', [AuthController::class, 'logout']);
+    // Route::post('/logout', [AuthController::class, 'logout']);
 });
 
