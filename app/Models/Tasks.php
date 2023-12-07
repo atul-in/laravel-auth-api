@@ -15,4 +15,8 @@ class Tasks extends Model
         "description",
         "completed"
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

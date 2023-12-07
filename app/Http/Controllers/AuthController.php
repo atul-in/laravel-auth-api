@@ -28,6 +28,8 @@ class AuthController extends Controller
             'role_id' => $data['role_id']
         ]);
 
+        $user->assignRole('user');
+
         $user->notify(new \App\Notifications\WelcomeMailNotification($user));
 
         $token = $user->createToken('apiToken')->plainTextToken;
@@ -62,6 +64,7 @@ class AuthController extends Controller
 
         $res = [
             'user' => $user,
+            'isAdmin'=> Auth::user()->hasRole('admin'),
             'token' => $token
         ];
 

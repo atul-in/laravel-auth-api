@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    // $role = Role::create(['name' => 'user']);
+    // $permission = Permission::create(['name' => 'delete tasks',]);
+    // $permission = Permission::create(['name' => 'update tasks',]);
+    // $permission = Permission::create(['name' => 'get tasks',]);
+    // $permission = Permission::create(['name' => 'create tasks',]);
     return view('welcome');
 });
 

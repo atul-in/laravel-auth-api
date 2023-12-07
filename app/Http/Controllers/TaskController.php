@@ -9,25 +9,42 @@ use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
+    public $isAdmin;
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $this->isAdmin = Auth::user()->hasRole('admin');
+            return $next($request);
+        });
+    }
+
     public function createTask(Request $request)
     {
+
         $request->validate([
             'user_id' => 'nullable|exists:users,id',
             'title' => 'nullable|string',
             'description' => 'nullable|string',
             'completed' => 'boolean'
         ]);
-        $task = Tasks::create($request->all());
-        Log::debug($request->all());
-        return response()->json($task, 201);
+        if (!$this->isAdmin) {
+            $task = Tasks::create($request->all());
+            Log::debug($request->all());
+            return response()->json($task, 201);
+        } else {
+            return response()->json(['status' => false, 'message' => 'You are not authorized to create task'], 403);
+        }
     }
 
     public function getAllTasks(Request $request)
     {
         Log::debug("Going to load tasks");
-        $data = Auth::user()->role_id;
+        // $data = Auth::user()->role_id;
+        // $isAdmin = Auth::user()->hasRole('admin');
+        // Log::debug($this->isAdmin);
         try {
-            if ($data == 1) {
+            if ($this->isAdmin) {
                 $tasks = Tasks::orderBy($request->sortBy, $request->desc ? 'desc' : 'asc')->paginate($request->perPage ? $request->perPage : 10);
                 return response()->json(['success' => true, 'data' => $tasks]);
             } else {
@@ -56,15 +73,19 @@ class TaskController extends Controller
 
     public function updateTask(Request $request, $id)
     {
-        try {
-            $task = Tasks::find($id);
-            if (!$task) {
-                return response()->json(['message' => 'Task not found'], 404);
+        if (!$this->isAdmin) {
+            try {
+                $task = Tasks::find($id);
+                if (!$task) {
+                    return response()->json(['message' => 'Task not found'], 404);
+                }
+                $task->update($request->all());
+                return response()->json(['success' => true, 'data' => $task]);
+            } catch (\Exception $error) {
+                return response()->json(['seccess' => false, 'error' => $error->getMessage()], 500);
             }
-            $task->update($request->all());
-            return response()->json(['success' => true, 'data' => $task]);
-        } catch (\Exception $error) {
-            return response()->json(['seccess' => false, 'error' => $error->getMessage()], 500);
+        } else {
+            return response()->json(['success' => false, 'message' => "You are not authorized"], 403);
         }
     }
 
