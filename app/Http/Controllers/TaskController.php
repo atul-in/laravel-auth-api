@@ -44,10 +44,10 @@ class TaskController extends Controller
         // Log::debug($this->isAdmin);
         try {
             if ($this->isAdmin) {
-                $tasks = Tasks::orderBy($request->sortBy, $request->desc ? 'desc' : 'asc')->paginate($request->perPage ? $request->perPage : 10);
+                $tasks = Tasks::orderBy($request->sortBy, $request->desc == 'true' ? 'desc' : 'asc')->paginate($request->perPage ? $request->perPage : 10);
                 return response()->json(['success' => true, 'data' => $tasks]);
             } else {
-                $tasks = Tasks::where('user_id', Auth::user()->id)->orderBy($request->sortBy, $request->desc ? 'desc' : 'asc')->paginate($request->perPage ? $request->perPage : 10);
+                $tasks = Tasks::where('user_id', Auth::user()->id)->orderBy($request->sortBy, $request->desc == 'true' ? 'desc' : 'asc')->paginate($request->perPage ? $request->perPage : 10);
                 return response()->json(['success' => true, 'data' => $tasks]);
             }
         } catch (\Exception $error) {
