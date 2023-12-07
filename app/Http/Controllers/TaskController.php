@@ -40,7 +40,6 @@ class TaskController extends Controller
     public function getAllTasks(Request $request)
     {
         Log::debug("Going to load tasks");
-        // $data = Auth::user()->role_id;
         // $isAdmin = Auth::user()->hasRole('admin');
         // Log::debug($this->isAdmin);
         try {
