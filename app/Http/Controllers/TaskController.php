@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TasksExport;
+use App\Imports\TasksImport;
 use App\Models\Tasks;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TaskController extends Controller
 {
@@ -30,6 +33,11 @@ class TaskController extends Controller
         ]);
         if (!$this->isAdmin) {
             $task = Tasks::create($request->all());
+            // $task = Tasks::create([
+            //     'title' => $request->title,
+            //     'description'=> $request->description,
+            //     'completed'=> $request->completed,
+            // ]);
             Log::debug($request->all());
             return response()->json($task, 201);
         } else {
@@ -97,4 +105,35 @@ class TaskController extends Controller
             return response()->json(['seccess' => false, 'error' => $error->getMessage()], 500);
         }
     }
+
+    public function downloadTasks()
+    {
+        try {
+            return Excel::download(new TasksExport(Auth::id(), $this->isAdmin), 'tasks.xlsx');
+            //return response()->json(['status' => true, 'data' => $data, 'message' => 'Tasks exported successfully.'], 200);
+        } catch (\Exception $e) {
+            Log::error('Error downloading tasks: ' . $e->getMessage());
+            return response()->json(['status' => false, 'error' => 'Failed to download tasks.'], 500);
+        }
+    }
+
+    public function importTasks(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:csv,xlsx',
+        ]);
+        // Log::debug($request->all());
+        
+        try {
+            $file =  $request->file('file')->store('temp');
+            // Log::debug($file);
+            Excel::import(new TasksImport, $file);
+
+            // return response()->json(['status' => true, 'message' => 'Tasks imported successfully.', 'file' => $file], 200);
+            return response()->json(['status' => true, 'message' => 'Tasks imported successfully.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => 'Failed to import tasks.'], 500);
+        }
+    }
+
 }

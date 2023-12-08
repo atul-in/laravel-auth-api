@@ -35,7 +35,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::patch('/task/{id}', [TaskController::class, 'updateTask']);
     Route::delete('/task/{id}', [TaskController::class, 'deleteTask']);
 
+    Route::get('/download-tasks', [TaskController::class, 'downloadTasks']);
+    Route::post('/import-tasks', [TaskController::class, 'importTasks']);
+
     // logout 
     // Route::post('/logout', [AuthController::class, 'logout']);
 });
+
+
 
