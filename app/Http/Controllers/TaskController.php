@@ -110,7 +110,6 @@ class TaskController extends Controller
     {
         try {
             return Excel::download(new TasksExport(Auth::id(), $this->isAdmin), 'tasks.xlsx');
-            //return response()->json(['status' => true, 'data' => $data, 'message' => 'Tasks exported successfully.'], 200);
         } catch (\Exception $e) {
             Log::error('Error downloading tasks: ' . $e->getMessage());
             return response()->json(['status' => false, 'error' => 'Failed to download tasks.'], 500);
@@ -122,14 +121,10 @@ class TaskController extends Controller
         $request->validate([
             'file' => 'required|mimes:csv,xlsx',
         ]);
-        // Log::debug($request->all());
         
         try {
             $file =  $request->file('file')->store('temp');
-            // Log::debug($file);
             Excel::import(new TasksImport, $file);
-
-            // return response()->json(['status' => true, 'message' => 'Tasks imported successfully.', 'file' => $file], 200);
             return response()->json(['status' => true, 'message' => 'Tasks imported successfully.'], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => false, 'message' => 'Failed to import tasks.'], 500);
