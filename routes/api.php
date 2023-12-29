@@ -32,7 +32,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/tasks', [TaskController::class, 'getAllTasks']);
     Route::get('/task/{id}', [TaskController::class, 'getTask']);
     Route::put('/task/{id}', [TaskController::class, 'updateTask']);
-    Route::patch('/task/{id}', [TaskController::class, 'updateTask']);
+    // Route::patch('/task/{id}', [TaskController::class, 'updateTask']);
     Route::delete('/task/{id}', [TaskController::class, 'deleteTask']);
 
     Route::get('/download-tasks', [TaskController::class, 'downloadTasks']);
